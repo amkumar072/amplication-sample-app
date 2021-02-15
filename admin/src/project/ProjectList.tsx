@@ -16,7 +16,6 @@ import {
   TimeSince,
 } from "@amplication/design-system";
 
-import { UserTitle } from "../user/UserTitle";
 import { Project } from "../api/project/Project";
 
 type Data = Project[];
@@ -55,11 +54,6 @@ const FIELDS: DataField[] = [
   {
     name: "name",
     title: "Name",
-    sortable: false,
-  },
-  {
-    name: "owner",
-    title: "Owner",
     sortable: false,
   },
   {
@@ -120,9 +114,6 @@ export const ProjectList = (): React.ReactElement => {
                 </DataGridCell>
                 <DataGridCell>
                   <>{item.name}</>
-                </DataGridCell>
-                <DataGridCell>
-                  <UserTitle id={item.owner?.id} />
                 </DataGridCell>
                 <DataGridCell>
                   <>{item.startDate}</>

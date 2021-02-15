@@ -17,6 +17,7 @@ import {
 
 import { api } from "../api";
 import useBreadcrumbs from "../components/breadcrumbs/use-breadcrumbs";
+import { TaskSelect } from "../task/TaskSelect";
 import { User as TUser } from "../api/user/User";
 import { UserUpdateInput } from "../api/user/UserUpdateInput";
 import { RoleSelect } from "../user/RoleSelect";
@@ -73,7 +74,14 @@ export const User = (): React.ReactElement => {
 
   const initialValues = React.useMemo(
     () =>
-      pick(data, ["firstName", "lastName", "password", "roles", "username"]),
+      pick(data, [
+        "firstName",
+        "lastName",
+        "password",
+        "roles",
+        "test",
+        "username",
+      ]),
     [data]
   );
 
@@ -121,6 +129,9 @@ export const User = (): React.ReactElement => {
             </div>
             <div>
               <RoleSelect label="Roles" name="roles" />
+            </div>
+            <div>
+              <TaskSelect label="test" name="test.id" />
             </div>
             <div>
               <TextField label="Username" name="username" />

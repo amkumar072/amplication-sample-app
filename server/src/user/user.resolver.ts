@@ -14,6 +14,8 @@ import { DeleteUserArgs } from "./DeleteUserArgs";
 import { FindManyUserArgs } from "./FindManyUserArgs";
 import { FindOneUserArgs } from "./FindOneUserArgs";
 import { User } from "./User";
+import { FindManyTaskArgs } from "../task/FindManyTaskArgs";
+import { Task } from "../task/Task";
 
 @graphql.Resolver(() => User)
 @common.UseGuards(gqlBasicAuthGuard.GqlBasicAuthGuard, gqlACGuard.GqlACGuard)
@@ -101,7 +103,15 @@ export class UserResolver {
     // @ts-ignore
     return await this.service.create({
       ...args,
-      data: args.data,
+      data: {
+        ...args.data,
+
+        test: args.data.test
+          ? {
+              connect: args.data.test,
+            }
+          : undefined,
+      },
     });
   }
 
@@ -140,7 +150,15 @@ export class UserResolver {
       // @ts-ignore
       return await this.service.update({
         ...args,
-        data: args.data,
+        data: {
+          ...args.data,
+
+          test: args.data.test
+            ? {
+                connect: args.data.test,
+              }
+            : undefined,
+        },
       });
     } catch (error) {
       if (isRecordNotFoundError(error)) {
@@ -170,5 +188,55 @@ export class UserResolver {
       }
       throw error;
     }
+  }
+
+  @graphql.ResolveField(() => [Task])
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "read",
+    possession: "any",
+  })
+  async user(
+    @graphql.Parent() parent: User,
+    @graphql.Args() args: FindManyTaskArgs,
+    @gqlUserRoles.UserRoles() userRoles: string[]
+  ): Promise<Task[]> {
+    const permission = this.rolesBuilder.permission({
+      role: userRoles,
+      action: "read",
+      possession: "any",
+      resource: "Task",
+    });
+    const results = await this.service
+      .findOne({ where: { id: parent.id } })
+      // @ts-ignore
+      .user(args);
+    return results.map((result) => permission.filter(result));
+  }
+
+  @graphql.ResolveField(() => Task, { nullable: true })
+  @nestAccessControl.UseRoles({
+    resource: "User",
+    action: "read",
+    possession: "any",
+  })
+  async test(
+    @graphql.Parent() parent: User,
+    @gqlUserRoles.UserRoles() userRoles: string[]
+  ): Promise<Task | null> {
+    const permission = this.rolesBuilder.permission({
+      role: userRoles,
+      action: "read",
+      possession: "any",
+      resource: "Task",
+    });
+    const result = await this.service
+      .findOne({ where: { id: parent.id } })
+      .test();
+
+    if (!result) {
+      return null;
+    }
+    return permission.filter(result);
   }
 }

@@ -14,7 +14,8 @@ import { DeleteProjectArgs } from "./DeleteProjectArgs";
 import { FindManyProjectArgs } from "./FindManyProjectArgs";
 import { FindOneProjectArgs } from "./FindOneProjectArgs";
 import { Project } from "./Project";
-import { User } from "../user/User";
+import { FindManyTaskArgs } from "../task/FindManyTaskArgs";
+import { Task } from "../task/Task";
 
 @graphql.Resolver(() => Project)
 @common.UseGuards(gqlBasicAuthGuard.GqlBasicAuthGuard, gqlACGuard.GqlACGuard)
@@ -102,13 +103,7 @@ export class ProjectResolver {
     // @ts-ignore
     return await this.service.create({
       ...args,
-      data: {
-        ...args.data,
-
-        owner: {
-          connect: args.data.owner,
-        },
-      },
+      data: args.data,
     });
   }
 
@@ -147,13 +142,7 @@ export class ProjectResolver {
       // @ts-ignore
       return await this.service.update({
         ...args,
-        data: {
-          ...args.data,
-
-          owner: {
-            connect: args.data.owner,
-          },
-        },
+        data: args.data,
       });
     } catch (error) {
       if (isRecordNotFoundError(error)) {
@@ -187,7 +176,7 @@ export class ProjectResolver {
     }
   }
 
-  @graphql.ResolveField(() => User, { nullable: true })
+  @graphql.ResolveField(() => [Task])
   @nestAccessControl.UseRoles({
     resource: "Project",
     action: "read",
@@ -195,21 +184,19 @@ export class ProjectResolver {
   })
   async user(
     @graphql.Parent() parent: Project,
+    @graphql.Args() args: FindManyTaskArgs,
     @gqlUserRoles.UserRoles() userRoles: string[]
-  ): Promise<User | null> {
+  ): Promise<Task[]> {
     const permission = this.rolesBuilder.permission({
       role: userRoles,
       action: "read",
       possession: "any",
-      resource: "User",
+      resource: "Task",
     });
-    const result = await this.service
+    const results = await this.service
       .findOne({ where: { id: parent.id } })
-      .owner();
-
-    if (!result) {
-      return null;
-    }
-    return permission.filter(result);
+      // @ts-ignore
+      .user(args);
+    return results.map((result) => permission.filter(result));
   }
 }

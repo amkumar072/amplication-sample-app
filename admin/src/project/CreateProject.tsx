@@ -13,7 +13,6 @@ import {
 } from "@amplication/design-system";
 import { api } from "../api";
 import useBreadcrumbs from "../components/breadcrumbs/use-breadcrumbs";
-import { UserSelect } from "../user/UserSelect";
 import { Project } from "../api/project/Project";
 import { ProjectCreateInput } from "../api/project/ProjectCreateInput";
 
@@ -68,9 +67,6 @@ export const CreateProject = (): React.ReactElement => {
           </div>
           <div>
             <TextField label="Name" name="name" />
-          </div>
-          <div>
-            <UserSelect label="Owner" name="owner.id" />
           </div>
           <div>
             <TextField type="date" label="Start Date" name="startDate" />
