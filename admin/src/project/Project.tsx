@@ -17,7 +17,6 @@ import {
 
 import { api } from "../api";
 import useBreadcrumbs from "../components/breadcrumbs/use-breadcrumbs";
-import { UserSelect } from "../user/UserSelect";
 import { Project as TProject } from "../api/project/Project";
 import { ProjectUpdateInput } from "../api/project/ProjectUpdateInput";
 
@@ -73,14 +72,7 @@ export const Project = (): React.ReactElement => {
 
   const initialValues = React.useMemo(
     () =>
-      pick(data, [
-        "description",
-        "dueDate",
-        "endDate",
-        "name",
-        "owner",
-        "startDate",
-      ]),
+      pick(data, ["description", "dueDate", "endDate", "name", "startDate"]),
     [data]
   );
 
@@ -130,9 +122,6 @@ export const Project = (): React.ReactElement => {
             </div>
             <div>
               <TextField label="Name" name="name" />
-            </div>
-            <div>
-              <UserSelect label="Owner" name="owner.id" />
             </div>
             <div>
               <TextField type="date" label="Start Date" name="startDate" />

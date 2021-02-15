@@ -16,6 +16,7 @@ import {
   TimeSince,
 } from "@amplication/design-system";
 
+import { TaskTitle } from "../task/TaskTitle";
 import { User } from "../api/user/User";
 
 type Data = User[];
@@ -49,6 +50,11 @@ const FIELDS: DataField[] = [
   {
     name: "roles",
     title: "Roles",
+    sortable: false,
+  },
+  {
+    name: "test",
+    title: "test",
     sortable: false,
   },
   {
@@ -106,6 +112,9 @@ export const UserList = (): React.ReactElement => {
                 </DataGridCell>
                 <DataGridCell>
                   <>{item.roles}</>
+                </DataGridCell>
+                <DataGridCell>
+                  <TaskTitle id={item.test?.id} />
                 </DataGridCell>
                 <DataGridCell>
                   <TimeSince time={item.updatedAt} />

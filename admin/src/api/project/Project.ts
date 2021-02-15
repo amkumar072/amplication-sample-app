@@ -1,5 +1,3 @@
-import { UserWhereUniqueInput } from "../user/UserWhereUniqueInput";
-
 export type Project = {
   createdAt: Date;
   description: string | null;
@@ -7,7 +5,6 @@ export type Project = {
   endDate: Date | null;
   id: string;
   name: string | null;
-  owner: UserWhereUniqueInput;
   startDate: Date | null;
   updatedAt: Date;
 };

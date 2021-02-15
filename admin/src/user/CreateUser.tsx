@@ -13,6 +13,7 @@ import {
 } from "@amplication/design-system";
 import { api } from "../api";
 import useBreadcrumbs from "../components/breadcrumbs/use-breadcrumbs";
+import { TaskSelect } from "../task/TaskSelect";
 import { User } from "../api/user/User";
 import { UserCreateInput } from "../api/user/UserCreateInput";
 import { RoleSelect } from "../user/RoleSelect";
@@ -68,6 +69,9 @@ export const CreateUser = (): React.ReactElement => {
           </div>
           <div>
             <RoleSelect label="Roles" name="roles" />
+          </div>
+          <div>
+            <TaskSelect label="test" name="test.id" />
           </div>
           <div>
             <TextField label="Username" name="username" />
